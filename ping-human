@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+#
+# ping-human
+#
+# Agent-facing entrypoint for desktop human pings.
+#
+# The wrapper keeps agent usage stable while allowing the implementation to use
+# the richer native Swift toast when it has been built. If the native helper is
+# unavailable, the wrapper falls back to the AppleScript notification so agents
+# can still get a human's attention without a build step.
+set -euo pipefail
+
+# Resolve paths relative to this script so callers can run it from any working
+# directory without breaking the helper or fallback lookup.
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+# Agents may pass a short, request-specific message. With no arguments, use a
+# safe default that explains the blocked state without needing task context.
+MESSAGE="${*:-An agent is paused and needs a human before continuing.}"
+
+# Keep the toast readable. The native helper applies the same cap, but enforcing
+# it here also protects the AppleScript fallback path.
+MAX_MESSAGE_LENGTH=90
+TOAST_BINARY="$SCRIPT_DIR/.build/debug/ping-human-toast"
+
+# Shorten oversized messages instead of failing. Human ping prompts should be
+# terse attention signals, not detailed handoffs.
+if ((${#MESSAGE} > MAX_MESSAGE_LENGTH)); then
+  MESSAGE="${MESSAGE:0:MAX_MESSAGE_LENGTH}..."
+fi
+
+# Prefer the polished native toast when present; otherwise use the
+# zero-dependency macOS notification fallback.
+if [[ -x "$TOAST_BINARY" ]]; then
+  "$TOAST_BINARY" "$MESSAGE"
+else
+  osascript "$SCRIPT_DIR/ping-human.applescript" "$MESSAGE"
+fi

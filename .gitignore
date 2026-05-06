@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# Swift Package Manager build output
+.build/
+
+# SwiftPM/Xcode local workspace metadata
+.swiftpm/
+xcuserdata/
+
+# Xcode generated artifacts
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM
+*.dSYM.zip
+*.xcodeproj/
+*.xcworkspace/
+
+# Editor-local settings
+.vscode/
