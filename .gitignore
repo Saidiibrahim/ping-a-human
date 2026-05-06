@@ -19,3 +19,6 @@ DerivedData/
 
 # Editor-local settings
 .vscode/
+
+# Codex
+.codex/
