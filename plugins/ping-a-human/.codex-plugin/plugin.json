@@ -1,0 +1,30 @@
+{
+  "name": "ping-a-human",
+  "version": "0.1.0",
+  "description": "Codex plugin that lets coding agents send a short local macOS ping when human input is required.",
+  "keywords": [
+    "codex",
+    "agent",
+    "macos",
+    "notification",
+    "human-in-the-loop"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Ping A Human",
+    "shortDescription": "Notify a human when an agent is blocked.",
+    "longDescription": "Packages a Codex skill with a macOS Swift/AppKit toast helper and AppleScript fallback so coding agents can send one short local desktop ping when work is blocked on human input.",
+    "developerName": "Ping A Human",
+    "category": "Productivity",
+    "capabilities": [
+      "Skills",
+      "Local Automation"
+    ],
+    "defaultPrompt": [
+      "Use $ping-a-human when you need me to return.",
+      "Ping me if you are blocked on approval.",
+      "Notify me when browser login is needed."
+    ],
+    "brandColor": "#4F7DFF"
+  }
+}

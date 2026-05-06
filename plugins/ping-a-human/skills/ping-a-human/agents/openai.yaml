@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ping A Human"
+  short_description: "Ping a blocked human on macOS."
+  default_prompt: "Use $ping-a-human to notify me when you are blocked and need human input."

@@ -1,65 +1,85 @@
 # Ping A Human
 
-Use this script when an agent is blocked and needs to bring a human back to the desktop.
+A skill and plugin for agents that are blocked and need to bring a human back to the desktop. The native AppKit toast, Bash wrapper, AppleScript fallback, and SVG preview exist to support the `$ping-a-human` skill.
 
 <p>
   <img src="docs/ping-human-toast.svg" alt="Ping A Human toast preview" width="448">
 </p>
 
-The preview above is a static SVG companion for the native AppKit toast design.
-The source of truth for the rendered toast lives in `Sources/PingHumanToast/main.swift`.
+The preview above is a static SVG companion for the native AppKit toast design. The rendered toast implementation lives in `Sources/PingHumanToast/main.swift` and is bundled into the skill under `plugins/ping-a-human/skills/ping-a-human/scripts/`.
 
-## Recommended usage
+## Skill Package
 
-Build the native toast helper once:
+- Skill: `plugins/ping-a-human/skills/ping-a-human/SKILL.md`
+- Skill UI metadata: `plugins/ping-a-human/skills/ping-a-human/agents/openai.yaml`
+- Plugin manifest: `plugins/ping-a-human/.codex-plugin/plugin.json`
+- Repo marketplace entry: `.agents/plugins/marketplace.json`
+- Bundled runtime: `plugins/ping-a-human/skills/ping-a-human/scripts/`
 
-```sh
-swift build
+The root SwiftPM, Bash, AppleScript, and SVG files are the development sources for the runtime that the skill bundles. When those files change, sync the matching files into the plugin skill before treating the repo as complete.
+
+## Using The Skill
+
+In Codex, invoke the skill when an agent is blocked on human input:
+
+```text
+Use $ping-a-human to notify me that browser login is needed.
 ```
 
-Then call the wrapper:
+For direct local testing, run the bundled skill wrapper:
 
 ```sh
-./ping-human
+SKILL_DIR="plugins/ping-a-human/skills/ping-a-human"
+"$SKILL_DIR/scripts/ping-human" "Review database cutover?"
 ```
 
-This uses the default message:
+With no argument, the wrapper uses:
 
 ```text
 An agent is paused and needs a human before continuing.
 ```
 
-Agents can pass one short custom message:
+Messages are capped at 90 characters and longer text is shortened automatically.
+
+## Runtime Development
+
+Build the root native toast helper while working on the AppKit implementation:
 
 ```sh
+swift build
 ./ping-human "Review database cutover?"
 ```
 
-Messages are capped at 90 characters and longer text is shortened automatically.
-
-The wrapper uses the polished Swift toast when `.build/debug/ping-human-toast` exists. If the helper has not been built, it falls back to the zero-dependency AppleScript notification.
-
-## AppleScript fallback
-
-```sh
-osascript ping-human.applescript
-```
-
-With a custom message:
+The wrapper uses `.build/debug/ping-human-toast` when present. If the helper has not been built, it falls back to the zero-dependency AppleScript notification:
 
 ```sh
 osascript ping-human.applescript "Review database cutover?"
 ```
 
-The script sends a short-lived macOS notification and exits immediately.
-
-## Native toast options
+After runtime changes, sync the skill bundle:
 
 ```sh
-.build/debug/ping-human-toast \
-  --title "Ping A Human" \
-  --subtitle "Agent is waiting" \
-  "Review database cutover?"
+cp Package.swift plugins/ping-a-human/skills/ping-a-human/scripts/Package.swift
+cp Sources/PingHumanToast/main.swift plugins/ping-a-human/skills/ping-a-human/scripts/Sources/PingHumanToast/main.swift
+cp ping-human plugins/ping-a-human/skills/ping-a-human/scripts/ping-human
+cp ping-human.applescript plugins/ping-a-human/skills/ping-a-human/scripts/ping-human.applescript
+cp docs/ping-human-toast.svg plugins/ping-a-human/skills/ping-a-human/assets/ping-human-toast.svg
+chmod +x plugins/ping-a-human/skills/ping-a-human/scripts/ping-human
 ```
 
-The native toast is a small top-right floating window with custom color, icon treatment, shadow, typography, and a fixed 10-second auto-dismiss.
+## Validation
+
+Run the skill and plugin checks before handing off changes:
+
+```sh
+python3 /Users/ibrahimsaidi/.codex/skills/.system/skill-creator/scripts/quick_validate.py plugins/ping-a-human/skills/ping-a-human
+python3 -m json.tool plugins/ping-a-human/.codex-plugin/plugin.json >/dev/null
+python3 -m json.tool .agents/plugins/marketplace.json >/dev/null
+bash -n plugins/ping-a-human/skills/ping-a-human/scripts/ping-human
+osacompile -o /tmp/ping-human-plugin-fallback.scpt plugins/ping-a-human/skills/ping-a-human/scripts/ping-human.applescript
+rm -f /tmp/ping-human-plugin-fallback.scpt
+(cd plugins/ping-a-human/skills/ping-a-human/scripts && swift build)
+rm -rf plugins/ping-a-human/skills/ping-a-human/scripts/.build
+```
+
+The native toast is a small top-right floating window with custom color, icon treatment, shadow, typography, and a fixed 10-second auto-dismiss. Human ping messages should stay short and non-sensitive; detailed context belongs in the agent session, not the desktop notification.
