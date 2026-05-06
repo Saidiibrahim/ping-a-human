@@ -1,7 +1,7 @@
 {
   "name": "ping-a-human",
   "version": "0.1.0",
-  "description": "Codex plugin that lets coding agents send a short local macOS ping when human input is required.",
+  "description": "A plugin that lets coding agents send a short local macOS ping when human input is required.",
   "keywords": [
     "codex",
     "agent",

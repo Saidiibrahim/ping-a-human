@@ -1,12 +1,10 @@
 # Ping A Human
 
-A skill and plugin for agents that are blocked and need to bring a human back to the desktop. The native AppKit toast, Bash wrapper, AppleScript fallback, and SVG preview exist to support the `$ping-a-human` skill.
+A skill and plugin for agents that are blocked and need human input. The native AppKit toast, Bash wrapper, and AppleScript fallback exist to support the `$ping-a-human` skill.
 
 <p>
   <img src="docs/ping-human-toast.svg" alt="Ping A Human toast preview" width="448">
 </p>
-
-The preview above is a static SVG companion for the native AppKit toast design. The rendered toast implementation lives in `Sources/PingHumanToast/main.swift` and is bundled into the skill under `plugins/ping-a-human/skills/ping-a-human/scripts/`.
 
 ## Skill Package
 
@@ -20,7 +18,7 @@ The root SwiftPM, Bash, AppleScript, and SVG files are the development sources f
 
 ## Using The Skill
 
-In Codex, invoke the skill when an agent is blocked on human input:
+Invoke the skill when an agent is blocked on human input:
 
 ```text
 Use $ping-a-human to notify me that browser login is needed.

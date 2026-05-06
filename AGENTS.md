@@ -2,7 +2,7 @@
 
 ## Project Orientation
 
-This repository is a Codex skill/plugin project. The primary deliverable is the repo-local `ping-a-human` plugin and its `$ping-a-human` skill, which lets macOS coding agents send one short local desktop ping when they are blocked on human input.
+This repository is a skill/plugin project. The primary deliverable is the repo-local `ping-a-human` plugin and its `$ping-a-human` skill, which lets coding agents send one short local desktop ping when they are blocked on human input.
 
 Treat the root SwiftPM package, Bash wrapper, AppleScript fallback, and SVG preview as development sources for the runtime bundled inside the skill. Any runtime change must be reflected in `plugins/ping-a-human/skills/ping-a-human/scripts/` or `plugins/ping-a-human/skills/ping-a-human/assets/` before completion.
 

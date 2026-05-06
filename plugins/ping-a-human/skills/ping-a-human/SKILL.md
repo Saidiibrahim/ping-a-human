@@ -1,6 +1,6 @@
 ---
 name: ping-a-human
-description: Use when a Codex coding agent running on macOS is blocked, waiting on human input, or explicitly asked to wake/notify/ping the human with a short local desktop toast or Notification Center message. Supports the bundled Ping A Human Swift/AppKit toast helper plus an AppleScript fallback; do not use for routine progress updates or detailed handoffs.
+description: Use when an agent running on macOS is blocked, waiting on human input, or explicitly asked to wake/notify/ping the human with a short local desktop toast or Notification Center message. Supports the bundled Ping A Human Swift/AppKit toast helper plus an AppleScript fallback; do not use for routine progress updates or detailed handoffs.
 ---
 
 # Ping A Human
